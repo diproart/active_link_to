@@ -1,5 +1,4 @@
 module ActiveLinkTo
-
   # Wrapper around link_to. Accepts following params:
   #   :active         => Boolean | Symbol | Regex | Controller/Action Pair
   #   :class_active   => String
@@ -13,7 +12,7 @@ module ActiveLinkTo
     name = block_given? ? capture(&block) : args.shift
     options = args.shift || {}
     html_options = args.shift || {}
-    
+
     url = url_for(options)
 
     active_options  = { }
@@ -57,9 +56,9 @@ module ActiveLinkTo
   #
   def active_link_to_class(url, options = {})
     if is_active_link?(url, options[:active])
-      options[:class_active] || 'active'
+      options[:class_active] || active_class
     else
-      options[:class_inactive] || ''
+      options[:class_inactive] || inactive_class
     end
   end
 
@@ -110,6 +109,23 @@ module ActiveLinkTo
         end
       end
     end
+  end
+
+  # Configurable default active/inactive class.
+  # Add `config/initializers/active_link_to.rb`
+  # ```ruby
+  # ActiveLinkTo::active_class = "is-active"
+  # ActiveLinkTo::inactive_class = "is-disabled"
+  # ```
+
+  # Setup default active class
+  mattr_accessor :active_class do
+    'is-active'
+  end
+
+  # Setup default inactive class
+  mattr_accessor :inactive_class do
+    ''
   end
 end
 
